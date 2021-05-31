@@ -1,0 +1,34 @@
+version: '3'
+networks:
+    main:
+        driver: bridge
+
+services:
+    phpmyadmin:
+       image: phpmyadmin/phpmyadmin
+       networks:
+           - main
+       ports:
+           - 8040:80
+       environment:
+           MYSQL_ROOT_PASSWORD: rootpw
+           PMA_HOST: db
+       depends_on:
+           - db
+
+    db:
+        image: mariadb:10.6.1
+        networks:
+            - main
+        ports:
+           - 3306:3306
+        volumes:
+            - "vending_machine_db:/var/lib/mysql"
+        environment:
+            MYSQL_ROOT_PASSWORD: rootpw
+            MYSQL_DATABASE: vending_machine_db
+            MYSQL_USER: admin
+            MYSQL_PASSWORD: adminpw
+
+volumes:
+    vending_machine_db:
