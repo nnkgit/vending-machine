@@ -8,7 +8,21 @@ import { Product } from "../entity/Product"
 import { MachineStockProduct } from "../entity/MachineStockProduct"
 import { getRepository } from "typeorm";
 
-export const createUsers = async (request: Request, response: Response) => {
+export const getApp = async (request: Request, response: Response) => {
+  return response.json({ message: "vending machine api" })
+}
+export const initExampleData = async (request: Request, response: Response) => {
+  await createUsers()
+  await createLocations()
+  await createMachines()
+  await setMachineLocationPosition()
+  await createProducts()
+  await setStocks()
+  let machines = await getRepository(Machine).find({ relations: ['position', 'position.location', 'machineStockProducts', 'machineStockProducts.product'] })
+  return response.json(machines)
+}
+
+const createUsers = async () => {
   const roleAdmin = new Role()
   roleAdmin.name = "admin"
   roleAdmin.slug = "admin"
@@ -39,10 +53,9 @@ export const createUsers = async (request: Request, response: Response) => {
   user2.role = admin
   await getRepository(User).save(user2);
   const users = await getRepository(User).find({ relations: ["role"] })
-  return response.json(users)
 }
 
-export const createLocations = async (request: Request, response: Response) => {
+const createLocations = async () => {
   const location1 = new Location()
   location1.name = "บริษัท SCG"
   location1.status = "y"
@@ -98,10 +111,9 @@ export const createLocations = async (request: Request, response: Response) => {
   await getRepository(Position).save(position6)
 
   const locations = await getRepository(Location).find({ relations: ["positions"] })
-  return response.json(locations)
 }
 
-export const createMachines = async (request: Request, response: Response) => {
+const createMachines = async () => {
   const machine1 = new Machine()
   machine1.code = "AAAA1"
   machine1.min = 10;
@@ -145,10 +157,9 @@ export const createMachines = async (request: Request, response: Response) => {
   await getRepository(Machine).save(machine6)
 
   const machines = await getRepository(Machine).find()
-  return response.json(machines)
 }
 
-export const setMachineLocationPosition = async (request: Request, response: Response) => {
+const setMachineLocationPosition = async () => {
   // นำเครื่องไปติดตั้ง
   const machine1 = await getRepository(Machine).findOne({ where : { code: 'AAAA1' } })
   const machine2 = await getRepository(Machine).findOne({ where : { code: 'BBBB1' } })
@@ -184,11 +195,9 @@ export const setMachineLocationPosition = async (request: Request, response: Res
   await getRepository(Machine).save(machine6)
 
   const machines = await getRepository(Machine).find({ relations: ['position', 'position.location'] })
-  return response.json(machines)
 }
 
-export const createProducts = async (request: Request, response: Response) => {
-
+const createProducts = async () => {
   const product1 = new Product()
   product1.name = "ยาคูลท์"
   product1.price = 8;
@@ -220,28 +229,18 @@ export const createProducts = async (request: Request, response: Response) => {
   await getRepository(Product).save(product5)
 
   const data = await getRepository(Product).find()
-  return response.json(data)
 }
 
-export const setStocks = async (request: Request, response: Response) => {
+const setStocks = async () => {
   const machines = await getRepository(Machine).find()
   for (const machine of machines) {
-    console.log('machine :: ' + machine.code)
     const products = await getRepository(Product).find()
     for (const product of products) {
-      console.log('product :: ' + product.name)
       const machineStockProduct = new MachineStockProduct()
       machineStockProduct.stocks = machine.max
       machineStockProduct.machine = machine
       machineStockProduct.product = product
       await getRepository(MachineStockProduct).save(machineStockProduct)
     }
-
   }
-  return response.json(machines)
-}
-
-export const getTest = async (request: Request, response: Response) => {
-  const data = await getRepository(Machine).find({ relations: ['position', 'machineStockProducts'] })
-  return response.json(data)
 }

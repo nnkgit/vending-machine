@@ -1,35 +1,20 @@
-import { Router, Request, Response } from "express"
+import { Router } from "express"
 
-import { 
-  createUsers,
-  createLocations,
-  createMachines,
-  setMachineLocationPosition,
-  getTest,
-  createProducts,
-  setStocks
-} from "./controller/HomeController"
+import { initExampleData, getApp } from "./controller/AppController"
+
+import { getMachines, getMachineById, buy, addStocks
+} from "./controller/MachineController"
 
 const routes = Router()
 
-routes.get("/", (request: Request, response: Response) => {
-  return response.json({ message: "Hello World test" })
-})
+routes.get("/", getApp)
 
-routes.get("/create-users", createUsers)
+routes.get("/init-example-data", initExampleData)
 
-routes.get("/create-locations", createLocations)
+routes.get("/machines", getMachines)
+routes.get("/machine/:id", getMachineById)
 
-routes.get("/create-machines", createMachines)
-
-routes.get("/create-products", createProducts)
-
-routes.get("/set-machine-location-position", setMachineLocationPosition)
-
-routes.get("/set-stocks", setStocks)
-
-routes.get("/test", getTest)
-
-
+routes.post("/buy", buy)
+routes.post("/addstocks", addStocks)
 
 export default routes
