@@ -52,3 +52,11 @@ RUN "npm run serve" ใน admin
 step
 ยิง postman หรือ browser ที่ url http://localhost:4000/init-example-data
 เพื่อ สร้าง example data เพื่อลองใช้งาน
+
+อธิบาย โปรเจคเป็นวิีดีโอไว้ครับ 3 link ต่อเนื่องกันครับ คลิปละ 5 นาที
+
+https://www.loom.com/share/851b5361b0a440b4b140e9d4ce6a8942?sharedAppSource=personal_library
+
+https://www.loom.com/share/7d7e7f24ad68486096f64254c2069b3c?sharedAppSource=personal_library
+
+https://www.loom.com/share/ec067085494d4303a1a56bb7f68acb37?sharedAppSource=personal_library
